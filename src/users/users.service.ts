@@ -20,6 +20,10 @@ export class UsersService {
     return this.prisma.user.create({ data: user });
   }
 
+  async update(id: number, user: Prisma.UserUpdateInput): Promise<User> {
+    return this.prisma.user.update({ data: user, where: { id } });
+  }
+
   async deleteById(id: number): Promise<User> {
     return this.prisma.user.delete({ where: { id } });
   }

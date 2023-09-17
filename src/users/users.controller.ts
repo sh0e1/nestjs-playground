@@ -7,6 +7,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import {
@@ -15,7 +16,12 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateUserRequest, ListUsersResponse, User } from './users.dto';
+import {
+  CreateUserRequest,
+  ListUsersResponse,
+  UpdateUserRequest,
+  User,
+} from './users.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('users')
@@ -47,6 +53,16 @@ export class UsersController {
   @ApiCreatedResponse({ type: User })
   async create(@Body() body: CreateUserRequest): Promise<User> {
     const user = await this.usersService.create(body);
+    return { id: user.id, username: user.username, email: user.email };
+  }
+
+  @Patch(':id')
+  @ApiOkResponse({ type: User })
+  async update(
+    @Param('id') id: string,
+    @Body() body: UpdateUserRequest,
+  ): Promise<User> {
+    const user = await this.usersService.update(parseInt(id), body);
     return { id: user.id, username: user.username, email: user.email };
   }
 

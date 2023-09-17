@@ -32,3 +32,8 @@ export class CreateUserRequest {
   @ApiProperty()
   password: string;
 }
+
+export class UpdateUserRequest {
+  @ApiProperty()
+  username: string;
+}
