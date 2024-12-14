@@ -1,6 +1,6 @@
 services:
   app:
-    image: node:18
+    image: node:22-bookworm
     working_dir: /app
     command: ['npm', 'run', 'start:debug']
     ports:
