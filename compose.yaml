@@ -1,6 +1,7 @@
 services:
   app:
     image: node:22-bookworm
+    init: true
     working_dir: /app
     command: ['npm', 'run', 'start:debug']
     ports:
