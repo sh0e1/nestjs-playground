@@ -5,7 +5,7 @@ import { LoggerService } from 'src/common/logger/logger.service';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  constructor(private loggerService: LoggerService) {}
+  constructor(private readonly logger: LoggerService) {}
 
   use(req: Request, res: Response, next: NextFunction) {
     const startTime = process.hrtime();
@@ -14,7 +14,7 @@ export class LoggerMiddleware implements NestMiddleware {
       const endTime = process.hrtime(startTime);
       const timeMs = endTime[0] * 1e3 + endTime[1] * 1e-6;
 
-      this.loggerService.log(
+      this.logger.log(
         `"${req.method} ${req.originalUrl}" finished with code ${res.statusCode}`,
         {
           type: 'access',

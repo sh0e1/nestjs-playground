@@ -7,7 +7,7 @@ export class LoggerService implements NestLoggerService {
 
   constructor() {
     this.logger = createLogger({
-      level: process.env.LOG_LEVEL,
+      level: 'debug',
       format: format.combine(
         format.timestamp(),
         format.simple(),
