@@ -19,23 +19,26 @@ export class PrismaService
   }
 
   async onModuleInit() {
+    const meta = { type: 'database' };
+
     this.$on('query', (event) => {
       this.logger.debug(event.query, {
         params: event.params,
         duration: `${event.duration} ms`,
+        ...meta,
       });
     });
 
     this.$on('info', (event) => {
-      this.logger.log(event.message);
+      this.logger.log(event.message, meta);
     });
 
     this.$on('warn', (event) => {
-      this.logger.warn(event.message);
+      this.logger.warn(event.message, meta);
     });
 
     this.$on('error', (event) => {
-      this.logger.error(event.message);
+      this.logger.error(event.message, meta);
     });
 
     await this.$connect();
