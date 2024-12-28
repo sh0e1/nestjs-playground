@@ -11,4 +11,5 @@ updates:
           - '@nestjs/*'
       prisma:
         patterns:
-          - 'prisma*'
+          - 'prisma'
+          - '@prisma/client'
