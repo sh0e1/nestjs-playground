@@ -9,3 +9,6 @@ updates:
       nestjs:
         patterns:
           - '@nestjs/*'
+      prisma:
+        patterns:
+          - 'prisma*'
