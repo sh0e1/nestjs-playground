@@ -1,12 +1,12 @@
 import { plainToInstance } from 'class-transformer';
 import { IsEnum, IsPort, validateSync } from 'class-validator';
 
-const Environment = {
+export const Environment = {
   Development: 'development',
   Production: 'production',
   Test: 'test',
 };
-type Environment = (typeof Environment)[keyof typeof Environment];
+export type Environment = (typeof Environment)[keyof typeof Environment];
 
 class Configuration {
   @IsEnum(Environment)
@@ -16,7 +16,11 @@ class Configuration {
   port: string;
 }
 
-export default () => {
+export const isEnvDevelopment = (env: Environment): boolean => {
+  return env === Environment.Development;
+};
+
+export const load = () => {
   const config = {
     env: process.env.NODE_ENV || Environment.Development,
     port: process.env.PORT || '3000',
@@ -32,3 +36,5 @@ export default () => {
 
   return config;
 };
+
+export default load;
