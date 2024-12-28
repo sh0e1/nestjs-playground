@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
   imports: [
     CommonModule,
     ConfigModule.forRoot({
+      isGlobal: true,
       load: [configuration],
     }),
     UsersModule,
