@@ -1,15 +1,4 @@
 services:
-  app:
-    image: node:22-bookworm
-    init: true
-    working_dir: /app
-    command: ['npm', 'run', 'start:debug']
-    ports:
-      - '13000:3000'
-    environment:
-      DATABASE_URL: 'mysql://user:password@db:3306/playground'
-    volumes:
-      - .:/app
   db:
     image: mysql:8.0
     ports:
