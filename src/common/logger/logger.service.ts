@@ -1,6 +1,10 @@
 import { Injectable, LoggerService as NestLoggerService } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Environment, isEnvDevelopment } from 'src/config/configuration';
+import {
+  Environment,
+  isEnvDevelopment,
+  isEnvTest,
+} from 'src/config/configuration';
 import * as winston from 'winston';
 
 @Injectable()
@@ -30,6 +34,7 @@ export class LoggerService implements NestLoggerService {
       level,
       format,
       transports: [new winston.transports.Console()],
+      silent: isEnvTest(env),
     });
   }
 

@@ -20,6 +20,10 @@ export const isEnvDevelopment = (env: Environment): boolean => {
   return env === Environment.Development;
 };
 
+export const isEnvTest = (env: Environment): boolean => {
+  return env === Environment.Test;
+};
+
 export const load = () => {
   const config = {
     env: process.env.NODE_ENV || Environment.Development,
