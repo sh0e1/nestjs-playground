@@ -1,5 +1,6 @@
-import { NestFactory } from '@nestjs/core';
+import { VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { LoggerService } from './common/logger/logger.service';
@@ -13,6 +14,8 @@ async function bootstrap() {
   const loggerService = app.get(LoggerService);
 
   app.useLogger(loggerService);
+  app.enableVersioning({ type: VersioningType.URI });
+  app.enableShutdownHooks();
 
   // swagger
   const swaggerConfig = new DocumentBuilder()
@@ -22,8 +25,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
-
-  app.enableShutdownHooks();
 
   const port = configService.get('port');
   loggerService.log(`Listing on port ${port}`);
