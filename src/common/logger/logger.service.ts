@@ -19,10 +19,10 @@ export class LoggerService implements NestLoggerService {
     if (isEnvDevelopment(env)) {
       level = 'debug';
       format = winston.format.combine(
+        winston.format.colorize({ all: true }),
         winston.format.timestamp(),
         winston.format.errors({ stack: true }),
         winston.format.simple(),
-        winston.format.colorize({ all: true }),
       );
     }
 
@@ -33,19 +33,19 @@ export class LoggerService implements NestLoggerService {
     });
   }
 
-  log(message: string, ...meta: any[]): void {
-    this.logger.info(message, ...meta);
+  log(message: string, ...optionalParams: any[]): void {
+    this.logger.info(message, ...optionalParams);
   }
 
-  error(message: string, ...meta: any[]): void {
-    this.logger.error(message, ...meta);
+  error(message: string, stack: string, ...optionalParams: any[]): void {
+    this.logger.error(message, { stack_trace: stack, ...optionalParams });
   }
 
-  warn(message: string, ...meta: any[]): void {
-    this.logger.warn(message, ...meta);
+  warn(message: string, ...optionalParams: any[]): void {
+    this.logger.warn(message, ...optionalParams);
   }
 
-  debug(message: string, ...meta: any[]): void {
-    this.logger.debug(message, ...meta);
+  debug(message: string, ...optionalParams: any[]): void {
+    this.logger.debug(message, ...optionalParams);
   }
 }
