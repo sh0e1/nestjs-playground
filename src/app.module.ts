@@ -4,6 +4,7 @@ import { CommonModule } from './common/common.module';
 import configuration from './config/configuration';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { UsersModule } from './users/users.module';
+import { ControllerModule } from './controller/controller.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { UsersModule } from './users/users.module';
       isGlobal: true,
       load: [configuration],
     }),
+    ControllerModule,
     UsersModule,
   ],
 })
