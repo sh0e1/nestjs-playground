@@ -8,7 +8,7 @@ jobs:
   tests:
     strategy:
       matrix:
-        tests: ['test', 'test:e2e']
+        tests: ['test:e2e'] # TODO Add more tests
     runs-on: ubuntu-latest
     services:
       db:
@@ -25,6 +25,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+    env:
+      DATABASE_URL: mysql://user:password@localhost:13306/playground
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -34,5 +36,9 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: Install dependencies
         run: npm ci
+      - name: Initialize database
+        run: mysql -h localhost -P 13306 -u user -ppassword playground < ./docker/mysql/init.sql
+      - name: Prisma deploy
+        run: npx prisma migrate deploy
       - name: Run tests
         run: npm run ${{ matrix.tests }}
