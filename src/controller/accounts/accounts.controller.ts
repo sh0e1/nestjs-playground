@@ -1,6 +1,23 @@
-import { Controller } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Post } from '@nestjs/common';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { AccountService } from 'src/service/account/account.service';
+
+import { CreateAccountRequest, CreateAccountResponse } from './accounts.dto';
 
 @ApiTags('accounts')
 @Controller({ path: 'accounts', version: '1' })
-export class AccountsController {}
+export class AccountsController {
+  constructor(private readonly account: AccountService) {}
+
+  @Post()
+  @ApiCreatedResponse({ type: CreateAccountResponse })
+  async create(
+    @Body() req: CreateAccountRequest,
+  ): Promise<CreateAccountResponse> {
+    return {
+      id: 0,
+      name: req.name,
+      email: req.email,
+    };
+  }
+}
