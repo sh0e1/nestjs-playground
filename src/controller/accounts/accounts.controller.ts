@@ -1,5 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { AccountWithoutPassword } from 'src/domain/account/account.type';
 import { AccountService } from 'src/service/account/account.service';
 
 import { CreateAccountRequest, CreateAccountResponse } from './accounts.dto';
@@ -14,10 +15,15 @@ export class AccountsController {
   async create(
     @Body() req: CreateAccountRequest,
   ): Promise<CreateAccountResponse> {
-    return {
-      id: 0,
-      name: req.name,
-      email: req.email,
-    };
+    return this.account.create(req).match(
+      (account: AccountWithoutPassword) => ({
+        id: account.id,
+        name: account.name,
+        email: account.email,
+      }),
+      (e) => {
+        throw e;
+      },
+    );
   }
 }
