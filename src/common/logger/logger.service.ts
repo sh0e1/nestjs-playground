@@ -11,7 +11,9 @@ import * as winston from 'winston';
 export class LoggerService implements NestLoggerService {
   private logger: winston.Logger;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService<{ env: Environment }, true>,
+  ) {
     let level = 'info';
     let format = winston.format.combine(
       winston.format.timestamp(),
@@ -19,7 +21,7 @@ export class LoggerService implements NestLoggerService {
       winston.format.json(),
     );
 
-    const env = this.configService.get<Environment>('env');
+    const env = this.configService.get('env', { infer: true });
     if (isEnvDevelopment(env)) {
       level = 'debug';
       format = winston.format.combine(
@@ -38,19 +40,20 @@ export class LoggerService implements NestLoggerService {
     });
   }
 
-  log(message: string, ...optionalParams: any[]): void {
-    this.logger.info(message, ...optionalParams);
+  log(message: string, optionalParams?: object): void {
+    this.logger.info(message, optionalParams);
   }
 
-  error(message: string, stack: string, ...optionalParams: any[]): void {
-    this.logger.error(message, { stack_trace: stack, ...optionalParams });
+  error(message: string, stack?: string, optionalParams?: object): void {
+    const params = stack ? { stack, ...optionalParams } : optionalParams;
+    this.logger.error(message, params);
   }
 
-  warn(message: string, ...optionalParams: any[]): void {
-    this.logger.warn(message, ...optionalParams);
+  warn(message: string, optionalParams?: object): void {
+    this.logger.warn(message, optionalParams);
   }
 
-  debug(message: string, ...optionalParams: any[]): void {
-    this.logger.debug(message, ...optionalParams);
+  debug(message: string, optionalParams?: object): void {
+    this.logger.debug(message, optionalParams);
   }
 }
