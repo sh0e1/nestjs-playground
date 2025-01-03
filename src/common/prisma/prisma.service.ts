@@ -45,4 +45,16 @@ export class PrismaService
 
     await this.$connect();
   }
+
+  // See https://www.prisma.io/docs/orm/reference/error-reference#error-codes
+  static readonly PRISMA_ERROR_CODES = {
+    NOT_FOUND: 'P2025',
+  };
+
+  static isNotFoundError(e: unknown): boolean {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return e.code === PrismaService.PRISMA_ERROR_CODES.NOT_FOUND;
+    }
+    return false;
+  }
 }

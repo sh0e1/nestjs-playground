@@ -1,4 +1,4 @@
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -14,6 +14,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const loggerService = app.get(LoggerService);
 
+  app.useGlobalPipes(new ValidationPipe());
   app.useLogger(loggerService);
   app.enableVersioning({ type: VersioningType.URI });
   app.enableShutdownHooks();
