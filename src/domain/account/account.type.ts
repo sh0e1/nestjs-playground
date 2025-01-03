@@ -25,11 +25,3 @@ export const accountCreatePropsSchema = z.object({
 });
 
 export type AccountCreateProps = z.infer<typeof accountCreatePropsSchema>;
-
-export const accountCreateInput = (params: AccountCreateProps) => {
-  return Prisma.validator<Prisma.AccountCreateInput>()({
-    name: params.name,
-    email: params.email,
-    password: params.password,
-  });
-};
