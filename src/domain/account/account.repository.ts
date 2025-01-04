@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { ResultAsync } from 'neverthrow';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 
+import { RepositoryError } from '../repository.error';
 import {
   AccountCreateProps,
   AccountWithoutPassword,
@@ -15,14 +16,16 @@ export class AccountRepository {
 
   findUnique(
     where: Prisma.AccountWhereUniqueInput,
-  ): ResultAsync<AccountWithoutPassword, Error> {
+  ): ResultAsync<AccountWithoutPassword | null, Error> {
     return ResultAsync.fromPromise(
       this.prisma.account.findUnique({
         ...accountWithoutPasswordArgs,
         where,
       }),
-      (e) => {
-        throw e;
+      (e: unknown) => {
+        throw new RepositoryError('failed to find unique for account', {
+          cause: e,
+        });
       },
     );
   }
@@ -41,8 +44,10 @@ export class AccountRepository {
         ...accountWithoutPasswordArgs,
         data: accountCreateInput(data),
       }),
-      (e) => {
-        throw e;
+      (e: unknown) => {
+        throw new RepositoryError('failed to create account', {
+          cause: e,
+        });
       },
     );
   }
