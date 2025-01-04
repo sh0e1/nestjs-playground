@@ -2,6 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { AccountWithoutPassword } from 'src/domain/account/account.type';
 import { AccountService } from 'src/service/account/account.service';
+import { ServiceError } from 'src/service/service.error';
 
 import { CreateAccountRequest, CreateAccountResponse } from './accounts.dto';
 
@@ -21,7 +22,7 @@ export class AccountsController {
         name: account.name,
         email: account.email,
       }),
-      (e) => {
+      (e: ServiceError) => {
         throw e;
       },
     );

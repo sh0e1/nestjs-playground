@@ -15,13 +15,15 @@ export const passwordRegex =
   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,32}$/;
 const SALT_ROUNDS = 10;
 
-export const accountCreatePropsSchema = z.object({
-  name: z.string().min(5).max(191),
-  email: z.string().email().max(191),
-  password: z
-    .string()
-    .regex(passwordRegex)
-    .transform((v) => bcrypt.hashSync(v, SALT_ROUNDS)),
-});
+export const accountCreatePropsSchema = z
+  .object({
+    name: z.string().min(5).max(191),
+    email: z.string().email().max(191),
+    password: z
+      .string()
+      .regex(passwordRegex)
+      .transform((v) => bcrypt.hashSync(v, SALT_ROUNDS)),
+  })
+  .strict();
 
 export type AccountCreateProps = z.infer<typeof accountCreatePropsSchema>;

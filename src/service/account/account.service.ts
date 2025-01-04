@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { err, errAsync, ok, okAsync, ResultAsync } from 'neverthrow';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { AccountRepository } from 'src/domain/account/account.repository';
 import {
-  accountCreateInput,
   AccountCreateProps,
   accountCreatePropsSchema,
   AccountWithoutPassword,
-  accountWithoutPasswordArgs,
 } from 'src/domain/account/account.type';
 import { ZodError } from 'zod';
 
+import { ServiceError } from '../service.error';
+
 @Injectable()
 export class AccountService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly accountRepository: AccountRepository) {}
 
   create(params: {
     name: string;
     email: string;
     password: string;
-  }): ResultAsync<AccountWithoutPassword, Error> {
+  }): ResultAsync<AccountWithoutPassword, ServiceError> {
     const validate = (
       props: AccountCreateProps,
     ): ResultAsync<AccountCreateProps, ZodError> => {
@@ -26,35 +26,26 @@ export class AccountService {
       return result.success ? okAsync(result.data) : errAsync(result.error);
     };
 
-    const checkIfEmailExists = (
-      email: string,
-    ): ResultAsync<AccountWithoutPassword, Error> => {
-      return ResultAsync.fromPromise(
-        this.prisma.account.findUnique({
-          ...accountWithoutPasswordArgs,
-          where: { email },
-        }),
-        (e) => {
-          throw e;
-        },
-      ).andThen((account) => {
-        return account ? err(new Error('email already exists')) : ok(account);
-      });
+    const checkIfEmailExists = (email: string): ResultAsync<null, Error> => {
+      return this.accountRepository
+        .findUnique({ email })
+        .andThen((account: AccountWithoutPassword) =>
+          account
+            ? err(ServiceError.AlreadyExists('email already exists'))
+            : ok(null),
+        );
     };
 
     return ResultAsync.combine([
       validate(params),
       checkIfEmailExists(params.email),
-    ]).andThen(([props, _]: [AccountCreateProps, AccountWithoutPassword]) => {
-      return ResultAsync.fromPromise(
-        this.prisma.account.create({
-          ...accountWithoutPasswordArgs,
-          data: accountCreateInput(props),
-        }),
-        (e) => {
-          throw e;
-        },
+    ])
+      .andThen(([props, _]: [AccountCreateProps, null]) =>
+        this.accountRepository.create(props),
+      )
+      .mapErr(
+        (e: Error): ServiceError =>
+          new ServiceError('failed to create account', { cause: e }),
       );
-    });
   }
 }
