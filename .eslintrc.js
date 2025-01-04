@@ -9,6 +9,7 @@ module.exports = {
     '@typescript-eslint/eslint-plugin',
     'simple-import-sort',
     'unused-imports',
+    'neverthrow',
   ],
   extends: [
     'plugin:@typescript-eslint/recommended',
@@ -38,5 +39,6 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    'neverthrow/must-use-result': 'error',
   },
 };
