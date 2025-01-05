@@ -14,7 +14,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const loggerService = app.get(LoggerService);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useLogger(loggerService);
   app.enableVersioning({ type: VersioningType.URI });
   app.enableShutdownHooks();
