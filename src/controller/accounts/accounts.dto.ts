@@ -1,8 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsEmail, IsString, Length, Matches, MaxLength } from 'class-validator';
 import { passwordRegex } from 'src/domain/account/account.type';
 
-export class CreateAccountRequest {
+class AccountDto {
+  @ApiProperty()
+  id: number;
+
   @ApiProperty()
   @IsString()
   @Length(5, 191)
@@ -18,13 +21,10 @@ export class CreateAccountRequest {
   password: string;
 }
 
-export class CreateAccountResponse {
-  @ApiProperty()
-  id: number;
+export class CreateAccountRequest extends OmitType(AccountDto, [
+  'id',
+] as const) {}
 
-  @ApiProperty()
-  name: string;
-
-  @ApiProperty()
-  email: string;
-}
+export class CreateAccountResponse extends OmitType(AccountDto, [
+  'password',
+] as const) {}
