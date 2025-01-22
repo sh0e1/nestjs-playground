@@ -13,6 +13,3 @@ updates:
         patterns:
           - 'prisma'
           - '@prisma/client'
-      typescript-eslint:
-        patterns:
-          - '@typescript-eslint/*'
