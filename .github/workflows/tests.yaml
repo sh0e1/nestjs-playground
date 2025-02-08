@@ -9,11 +9,6 @@ jobs:
     permissions:
       checks: write
       pull-requests: write
-    strategy:
-      matrix:
-        test-scripts:
-          - 'test'
-          - 'test:e2e'
     runs-on: ubuntu-latest
     services:
       db:
@@ -30,23 +25,49 @@ jobs:
           --health-retries 5
     env:
       DATABASE_URL: mysql://root:@localhost:13306/playground
+      COVERAGE_REPORT_DIR: ${{ github.workspace }}/coverage
+      COVERAGE_REPORT_KEY: coverage-report
     steps:
+      - uses: actions/cache/restore@v4
+        id: restore-cache
+        with:
+          key: env.COVERAGE_REPORT_KEY
+          path: env.COVERAGE_REPORT_DIR
+
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: 'npm'
           cache-dependency-path: package-lock.json
+
       - name: Install dependencies
         run: npm ci
+
       - name: Prisma deploy
         run: npx prisma migrate deploy
+
       - name: Run tests
-        run: npm run ${{ matrix.test-scripts }} -- --ci --json --coverage --testLocationInResults --outputFile=report.json
+        run: npm run test -- --ci --json --coverage --testLocationInResults --outputFile=report.json
+
+      - name: Set base coverage file if cache not found
+        if: steps.restore-cache.outputs.cache-hit != 'true'
+        run: cp report.json ${{ env.COVERAGE_REPORT_DIR }}
+
       - uses: ArtiomTr/jest-coverage-report-action@v2
+        if: github.event_name == 'pull_request'
         with:
           skip-step: all
-          custom-title: Coverage Report (${{ matrix.test-scripts }})
           coverage-file: report.json
-          base-coverage-file: report.json
-        if: always()
+          base-coverage-file: ${{ env.COVERAGE_REPORT_DIR }}/report.json
+
+      - name: Move coverage report for cache
+        if: github.ref == 'refs/heads/main'
+        run: mv report.json ${{ env.COVERAGE_REPORT_DIR }}
+
+      - uses: actions/cache/save@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          key: env.COVERAGE_REPORT_KEY
+          path: env.COVERAGE_REPORT_DIR
