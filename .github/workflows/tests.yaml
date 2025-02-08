@@ -6,9 +6,14 @@ on:
   pull_request:
 jobs:
   tests:
+    permissions:
+      checks: write
+      pull-requests: write
     strategy:
       matrix:
-        tests: ['test:e2e'] # TODO Add more tests
+        test-scripts:
+          - 'test'
+          - 'test:e2e'
     runs-on: ubuntu-latest
     services:
       db:
@@ -37,4 +42,11 @@ jobs:
       - name: Prisma deploy
         run: npx prisma migrate deploy
       - name: Run tests
-        run: npm run ${{ matrix.tests }}
+        run: npm run ${{ matrix.test-scripts }} -- --ci --json --coverage --testLocationInResults --outputFile=report.json
+      - uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          skip-step: all
+          custom-title: Coverage Report (${{ matrix.test-scripts }})
+          coverage-file: report.json
+          base-coverage-file: report.json
+        if: always()
