@@ -12,8 +12,8 @@ jobs:
     strategy:
       matrix:
         test-scripts:
-          - 'test:ci'
-          - 'test:e2e:ci'
+          - 'test'
+          - 'test:e2e'
     runs-on: ubuntu-latest
     services:
       db:
@@ -42,8 +42,9 @@ jobs:
       - name: Prisma deploy
         run: npx prisma migrate deploy
       - name: Run tests
-        run: npm run ${{ matrix.test-scripts }}
+        run: npm run ${{ matrix.test-scripts }}:ci
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           skip-step: all
+          custom-title: Coverage Report (${{ matrix.test-scripts }})
         if: always()
