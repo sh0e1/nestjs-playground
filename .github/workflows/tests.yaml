@@ -57,7 +57,7 @@ jobs:
 
       - name: Set base coverage file if cache not found
         if: steps.restore-cache.outputs.cache-hit != 'true'
-        run: cp report.json ${{ env.COVERAGE_REPORT_DIR }}/report.json
+        run: cp report.json ${{ env.COVERAGE_REPORT_DIR }}
 
       - uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
