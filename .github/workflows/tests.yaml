@@ -34,29 +34,41 @@ jobs:
       # Colon cannot be used in the artifact name, so replace the colon and set the artifact name to output.
       - name: Set coverage report artifact name
         id: set-coverage-report-artifact-name
-        if: github.event_name == 'pull_request'
         run: |
           test=${{ matrix.test-scripts }}
           echo "COVERAGE_REPORT_ARTIFACT_NAME=${test//:/_}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/download-artifact@v4
+        id: download-artifact
+        with:
+          name: ${{ steps.set-coverage-report-artifact-name.outputs.COVERAGE_REPORT_ARTIFACT_NAME }}-coverage-report
+          path: ${{ github.workspace }}/artifact
+
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: 'npm'
           cache-dependency-path: package-lock.json
+
       - name: Install dependencies
         run: npm ci
+
       - name: Prisma deploy
         run: npx prisma migrate deploy
+
       - name: Run tests
         run: npm run ${{ matrix.test-scripts }} -- --ci --json --coverage --testLocationInResults --outputFile=report.json
+
       - uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
         with:
           skip-step: all
           custom-title: Coverage Report (${{ matrix.test-scripts }})
           coverage-file: report.json
-          base-coverage-file: report.json
+          base-coverage-file: ${{ steps.download-artifact.outputs.download-path }}/report.json
+
       - uses: actions/upload-artifact@v4
         #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         if: github.event_name == 'pull_request'
