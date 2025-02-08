@@ -31,6 +31,11 @@ jobs:
     env:
       DATABASE_URL: mysql://root:@localhost:13306/playground
     steps:
+      # Colon cannot be used in the artifact name, so replace the colon and set the artifact name to output.
+      - name: Set coverage report artifact name
+        id: set-coverage-report-artifact-name
+        if: github.event_name == 'pull_request'
+        run: echo "COVERAGE_REPORT_ARTIFACT_NAME=${{ matrix.test-scripts }//:/_}" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -42,17 +47,17 @@ jobs:
       - name: Prisma deploy
         run: npx prisma migrate deploy
       - name: Run tests
-        run: npm run ${{ matrix.test-scripts }} -- --ci --json --coverage --testLocationInResults --outputFile=${{ matrix.test-scripts }}-report.json
+        run: npm run ${{ matrix.test-scripts }} -- --ci --json --coverage --testLocationInResults --outputFile=report.json
       - uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
         with:
           skip-step: all
           custom-title: Coverage Report (${{ matrix.test-scripts }})
-          coverage-file: ${{ matrix.test-scripts }}-report.json
-          base-coverage-file: ${{ matrix.test-scripts }}-report.json
+          coverage-file: report.json
+          base-coverage-file: report.json
       - uses: actions/upload-artifact@v4
         #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         if: github.event_name == 'pull_request'
         with:
-          name: coverage-report
-          path: ${{ matrix.test-scripts }}-report.json
+          name: ${{ steps.set-coverage-report-artifact-name.outputs.COVERAGE_REPORT_ARTIFACT_NAME }}-coverage-report
+          path: report.json
