@@ -63,13 +63,11 @@ jobs:
           base-coverage-file: ${{ env.COVERAGE_REPORT_DIR }}/report.json
 
       - name: Move coverage report for cache
-        #if: github.ref == 'refs/heads/main'
-        if: github.event_name == 'pull_request'
+        if: github.ref == 'refs/heads/main'
         run: mv report.json ${{ env.COVERAGE_REPORT_DIR }}
 
       - uses: actions/cache/save@v4
-        #if: github.ref == 'refs/heads/main'
-        if: github.event_name == 'pull_request'
+        if: github.ref == 'refs/heads/main'
         with:
           key: env.COVERAGE_REPORT_KEY
           path: env.COVERAGE_REPORT_DIR
