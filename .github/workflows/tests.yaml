@@ -42,7 +42,7 @@ jobs:
       - uses: actions/cache/restore@v4
         id: restore-cache
         with:
-          name: ${{ matrix.test-scripts }}-coverage-report
+          key: ${{ matrix.test-scripts }}-coverage-report
           path: env.CACHE_DIR
 
       - uses: actions/checkout@v4
@@ -79,5 +79,5 @@ jobs:
         #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         if: github.event_name == 'pull_request'
         with:
-          name: ${{ matrix.test-scripts }}-coverage-report
+          key: ${{ matrix.test-scripts }}-coverage-report
           path: ${{ env.CACHE_DIR }}
