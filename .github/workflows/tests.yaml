@@ -35,7 +35,9 @@ jobs:
       - name: Set coverage report artifact name
         id: set-coverage-report-artifact-name
         if: github.event_name == 'pull_request'
-        run: echo "COVERAGE_REPORT_ARTIFACT_NAME=${{ matrix.test-scripts }}//:/_" >> "$GITHUB_OUTPUT"
+        run: |
+          test=${{ matrix.test-scripts }}
+          echo "COVERAGE_REPORT_ARTIFACT_NAME=${test//:/_}" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
