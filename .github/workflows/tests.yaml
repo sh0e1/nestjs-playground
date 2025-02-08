@@ -42,7 +42,7 @@ jobs:
       - name: Prisma deploy
         run: npx prisma migrate deploy
       - name: Run tests
-        run: npm run ${{ matrix.test-scripts }}:ci
+        run: npm run ${{ matrix.test-scripts }} -- --ci --json --coverage --testLocationInResults --outputFile=report.json
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           skip-step: all
