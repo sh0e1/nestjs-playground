@@ -48,4 +48,5 @@ jobs:
           skip-step: all
           custom-title: Coverage Report (${{ matrix.test-scripts }})
           coverage-file: report.json
+          base-coverage-file: report.json
         if: always()
