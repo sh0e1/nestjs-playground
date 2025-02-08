@@ -59,7 +59,6 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           skip-step: all
-          custom-title: Coverage Report (${{ matrix.test-scripts }})
           coverage-file: report.json
           base-coverage-file: ${{ env.COVERAGE_REPORT_DIR }}/report.json
 
