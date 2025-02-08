@@ -8,7 +8,9 @@ jobs:
   tests:
     strategy:
       matrix:
-        tests: ['test:e2e'] # TODO Add more tests
+        test-scripts:
+          - 'test:ci'
+          - 'test:e2e:ci'
     runs-on: ubuntu-latest
     services:
       db:
@@ -37,5 +39,7 @@ jobs:
       - name: Prisma deploy
         run: npx prisma migrate deploy
       - name: Run tests
-        run: npm run ${{ matrix.tests }}
+        run: npm run ${{ matrix.test-scripts }}
       - uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          skip-step: all
