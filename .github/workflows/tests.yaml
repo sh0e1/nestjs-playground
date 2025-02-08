@@ -31,8 +31,8 @@ jobs:
       - uses: actions/cache/restore@v4
         id: restore-cache
         with:
-          key: env.COVERAGE_REPORT_KEY
-          path: env.COVERAGE_REPORT_DIR
+          key: ${{ env.COVERAGE_REPORT_KEY }}
+          path: ${{ env.COVERAGE_REPORT_DIR }}
 
       - uses: actions/checkout@v4
 
@@ -52,7 +52,7 @@ jobs:
         run: npm run test -- --ci --json --coverage --testLocationInResults --outputFile=report.json
 
       - name: Set base coverage file if cache not found
-        if: steps.restore-cache.outputs.cache-hit != 'true'
+        if: github.event_name == 'pull_request' && steps.restore-cache.outputs.cache-hit != 'true'
         run: cp report.json ${{ env.COVERAGE_REPORT_DIR }}
 
       - uses: ArtiomTr/jest-coverage-report-action@v2
@@ -69,5 +69,5 @@ jobs:
       - uses: actions/cache/save@v4
         if: github.ref == 'refs/heads/main'
         with:
-          key: env.COVERAGE_REPORT_KEY
-          path: env.COVERAGE_REPORT_DIR
+          key: ${{ env.COVERAGE_REPORT_KEY }}
+          path: ${{ env.COVERAGE_REPORT_DIR }}
