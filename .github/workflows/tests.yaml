@@ -6,6 +6,8 @@ on:
   pull_request:
 jobs:
   tests:
+    permissions:
+      pull-requests: write
     strategy:
       matrix:
         test-scripts:
