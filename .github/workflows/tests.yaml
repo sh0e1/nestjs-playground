@@ -42,7 +42,7 @@ jobs:
       - name: Prisma deploy
         run: npx prisma migrate deploy
       - name: Run tests
-        run: npm run ${{ matrix.test-scripts }} -- --ci --json --coverage --testLocationInResults --outputFile=report.json
+        run: npm run ${{ matrix.test-scripts }} -- --ci --json --coverage --testLocationInResults --outputFile=${{ matrix.test-scripts }}-report.json
       - uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
         with:
@@ -54,5 +54,5 @@ jobs:
         #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         if: github.event_name == 'pull_request'
         with:
-          name: ${{ matrix.test-scripts }}-coverage-report
+          name: coverage-report
           path: report.json
