@@ -25,7 +25,7 @@ jobs:
           --health-retries 5
     env:
       DATABASE_URL: mysql://root:@localhost:13306/playground
-      COVERAGE_REPORT_DIR: ${{ github.workspace }}/coverage
+      COVERAGE_REPORT_DIR: /tmp/coverage
       COVERAGE_REPORT_KEY: coverage-report
     steps:
       - uses: actions/cache/restore@v4
@@ -53,7 +53,7 @@ jobs:
 
       - name: Set base coverage file if cache not found
         if: github.event_name == 'pull_request' && steps.restore-cache.outputs.cache-hit != 'true'
-        run: cp report.json ${{ env.COVERAGE_REPORT_DIR }}
+        run: mkdir ${{ env.COVERAGE_REPORT_DIR }} && cp report.json ${{ env.COVERAGE_REPORT_DIR }}
 
       - uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
