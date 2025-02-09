@@ -66,6 +66,7 @@ jobs:
           skip-step: all
           coverage-file: report.json
           base-coverage-file: ${{ env.COVERAGE_REPORT_DIR }}/report.json
+          custom-title: Coverage report for ${{ matrix.test-scripts }}
 
       - name: Move coverage report for cache
         if: github.ref == 'refs/heads/main'
