@@ -69,7 +69,7 @@ jobs:
 
       - name: Move coverage report for cache
         if: github.ref == 'refs/heads/main'
-        run: mv report.json ${{ env.COVERAGE_REPORT_DIR }}
+        run: mv -f report.json ${{ env.COVERAGE_REPORT_DIR }}
 
       - uses: actions/cache/save@v4
         if: github.ref == 'refs/heads/main'
