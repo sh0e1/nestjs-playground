@@ -9,6 +9,11 @@ jobs:
     permissions:
       checks: write
       pull-requests: write
+    strategy:
+      matrix:
+        test-scripts:
+          - 'test'
+          - 'test:e2e'
     runs-on: ubuntu-latest
     services:
       db:
@@ -26,7 +31,7 @@ jobs:
     env:
       DATABASE_URL: mysql://root:@localhost:13306/playground
       COVERAGE_REPORT_DIR: /tmp/coverage
-      COVERAGE_REPORT_KEY: coverage-report
+      COVERAGE_REPORT_KEY: ${{ matrix.test-scripts }}-coverage-report
     steps:
       - uses: actions/cache/restore@v4
         id: restore-cache
@@ -49,7 +54,7 @@ jobs:
         run: npx prisma migrate deploy
 
       - name: Run tests
-        run: npm run test -- --ci --json --coverage --testLocationInResults --outputFile=report.json
+        run: npm run ${{ matrix.test-scripts }} -- --ci --json --coverage --testLocationInResults --outputFile=report.json
 
       - name: Set base coverage file if cache not found
         if: github.event_name == 'pull_request' && steps.restore-cache.outputs.cache-hit != 'true'
