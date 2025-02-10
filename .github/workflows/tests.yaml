@@ -39,6 +39,9 @@ jobs:
           key: ${{ env.COVERAGE_REPORT_KEY }}
           path: ${{ env.COVERAGE_REPORT_DIR }}
 
+      - name: debug
+        run: ls -la ${{ env.COVERAGE_REPORT_DIR }} && cat ${{ env.COVERAGE_REPORT_DIR }}/report.json
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
