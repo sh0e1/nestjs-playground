@@ -60,7 +60,7 @@ jobs:
 
       - name: Set base coverage file if file does not exist
         if: github.event_name == 'pull_request'
-        run: mkdir -p ${{ env.COVERAGE_REPORT_DIR }} && cp -n report.json ${{ env.COVERAGE_REPORT_DIR }}
+        run: mkdir -p ${{ env.COVERAGE_REPORT_DIR }} && cp --update=none report.json ${{ env.COVERAGE_REPORT_DIR }}
 
       - uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
