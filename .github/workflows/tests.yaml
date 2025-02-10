@@ -70,9 +70,9 @@ jobs:
           base-coverage-file: ${{ env.COVERAGE_REPORT_DIR }}/report.json
           custom-title: Coverage report for ${{ matrix.test-scripts }}
 
-      - name: Move coverage report for cache
+      - name: Copy coverage report for cache
         if: github.ref == 'refs/heads/main'
-        run: mv -f report.json ${{ env.COVERAGE_REPORT_DIR }}/
+        run: mkdir -p ${{ env.COVERAGE_REPORT_DIR }} && cp -f report.json ${{ env.COVERAGE_REPORT_DIR }}/
 
       - uses: actions/cache/save@v4
         if: github.ref == 'refs/heads/main'
