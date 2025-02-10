@@ -62,11 +62,6 @@ jobs:
         if: github.event_name == 'pull_request' && steps.restore-cache.outputs.cache-hit != 'true'
         run: mkdir ${{ env.COVERAGE_REPORT_DIR }} && cp report.json ${{ env.COVERAGE_REPORT_DIR }}
 
-      - name: debug
-        run: |
-          ls -la
-          ls -la ${{ env.COVERAGE_REPORT_DIR }}
-
       - uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
         with:
@@ -76,13 +71,11 @@ jobs:
           custom-title: Coverage report for ${{ matrix.test-scripts }}
 
       - name: Move coverage report for cache
-        # if: github.ref == 'refs/heads/main'
-        if: github.event_name == 'pull_request'
+        if: github.ref == 'refs/heads/main'
         run: mv -f report.json ${{ env.COVERAGE_REPORT_DIR }}
 
       - uses: actions/cache/save@v4
-        # if: github.ref == 'refs/heads/main'
-        if: github.event_name == 'pull_request'
+        if: github.ref == 'refs/heads/main'
         with:
           key: ${{ env.COVERAGE_REPORT_KEY }}
           path: ${{ env.COVERAGE_REPORT_DIR }}
