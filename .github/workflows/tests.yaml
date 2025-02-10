@@ -58,12 +58,9 @@ jobs:
           restore-keys: |
             ${{ matrix.test-scripts }}-coverage-report-
 
-      - name: Set base coverage file if cache not found
-        if: github.event_name == 'pull_request' && steps.restore-cache.outputs.cache-hit != 'true'
-        run: |
-          echo ${{ github.event_name }}
-          echo ${{ steps.restore-cache.outputs.cache-hit }}
-          mkdir ${{ env.COVERAGE_REPORT_DIR }} && cp report.json ${{ env.COVERAGE_REPORT_DIR }}
+      - name: Set base coverage file if file does not exist
+        if: github.event_name == 'pull_request'
+        run: mkdir -p ${{ env.COVERAGE_REPORT_DIR }} && cp -n report.json ${{ env.COVERAGE_REPORT_DIR }}
 
       - uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
