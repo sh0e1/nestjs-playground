@@ -40,7 +40,7 @@ jobs:
           path: ${{ env.COVERAGE_REPORT_DIR }}
 
       - name: debug
-        run: ls -la ${{ env.COVERAGE_REPORT_DIR }} && cat ${{ env.COVERAGE_REPORT_DIR }}/report.json
+        run: ls -la && cat report.json
 
       - uses: actions/checkout@v4
 
