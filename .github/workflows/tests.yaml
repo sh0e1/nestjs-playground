@@ -30,15 +30,9 @@ jobs:
           --health-retries 5
     env:
       DATABASE_URL: mysql://root:@localhost:13306/playground
-      COVERAGE_REPORT_DIR: /tmp/coverage
-      COVERAGE_REPORT_KEY: ${{ matrix.test-scripts }}-coverage-report
+      COVERAGE_REPORT_DIR: .coverage
+      COVERAGE_REPORT_KEY: ${{ matrix.test-scripts }}-coverage-report-${{ github.sha }}
     steps:
-      - uses: actions/cache/restore@v4
-        id: restore-cache
-        with:
-          key: ${{ env.COVERAGE_REPORT_KEY }}
-          path: ${{ env.COVERAGE_REPORT_DIR }}
-
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
@@ -56,9 +50,17 @@ jobs:
       - name: Run tests
         run: npm run ${{ matrix.test-scripts }} -- --ci --json --coverage --testLocationInResults --outputFile=report.json
 
-      - name: Set base coverage file if cache not found
-        if: github.event_name == 'pull_request' && steps.restore-cache.outputs.cache-hit != 'true'
-        run: mkdir ${{ env.COVERAGE_REPORT_DIR }} && cp report.json ${{ env.COVERAGE_REPORT_DIR }}
+      - uses: actions/cache/restore@v4
+        id: restore-cache
+        with:
+          key: ${{ env.COVERAGE_REPORT_KEY }}
+          path: ${{ env.COVERAGE_REPORT_DIR }}
+          restore-keys: |
+            ${{ matrix.test-scripts }}-coverage-report-
+
+      - name: Set base coverage file if file does not exist
+        if: github.event_name == 'pull_request'
+        run: mkdir -p ${{ env.COVERAGE_REPORT_DIR }} && cp --update=none report.json ${{ env.COVERAGE_REPORT_DIR }}
 
       - uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
