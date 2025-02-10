@@ -54,13 +54,13 @@ jobs:
         id: restore-cache
         with:
           key: ${{ env.COVERAGE_REPORT_KEY }}
-          path: ${{ env.COVERAGE_REPORT_DIR }}
+          path: ${{ env.COVERAGE_REPORT_DIR }}/*
           restore-keys: |
             ${{ matrix.test-scripts }}-coverage-report-
 
       - name: Set base coverage file if file does not exist
         if: github.event_name == 'pull_request'
-        run: mkdir -p ${{ env.COVERAGE_REPORT_DIR }} && cp --update=none report.json ${{ env.COVERAGE_REPORT_DIR }}
+        run: mkdir -p ${{ env.COVERAGE_REPORT_DIR }} && cp --update=none report.json ${{ env.COVERAGE_REPORT_DIR }}/
 
       - uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
@@ -72,10 +72,10 @@ jobs:
 
       - name: Move coverage report for cache
         if: github.ref == 'refs/heads/main'
-        run: mv -f report.json ${{ env.COVERAGE_REPORT_DIR }}
+        run: mv -f report.json ${{ env.COVERAGE_REPORT_DIR }}/
 
       - uses: actions/cache/save@v4
         if: github.ref == 'refs/heads/main'
         with:
           key: ${{ env.COVERAGE_REPORT_KEY }}
-          path: ${{ env.COVERAGE_REPORT_DIR }}
+          path: ${{ env.COVERAGE_REPORT_DIR }}/*
