@@ -20,11 +20,11 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^11.0.9",
+    "@nestjs/common": "^11.0.10",
     "@nestjs/config": "^4.0.0",
-    "@nestjs/core": "^11.0.9",
-    "@nestjs/platform-express": "^11.0.9",
-    "@nestjs/swagger": "^11.0.3",
+    "@nestjs/core": "^11.0.10",
+    "@nestjs/platform-express": "^11.0.10",
+    "@nestjs/swagger": "^11.0.4",
     "@nestjs/terminus": "^11.0.0",
     "@prisma/client": "^6.3.1",
     "bcryptjs": "^3.0.1",
@@ -39,9 +39,9 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.6",
     "@eslint/js": "^9.20.0",
-    "@nestjs/cli": "^11.0.2",
+    "@nestjs/cli": "^11.0.4",
     "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.0.9",
+    "@nestjs/testing": "^11.0.10",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.0",
     "@types/jest": "29.5.14",
