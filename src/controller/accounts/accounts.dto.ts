@@ -1,6 +1,6 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsEmail, IsString, Length, Matches, MaxLength } from 'class-validator';
-import { passwordRegex } from 'src/domain/account/account.type';
+import { passwordRegex } from 'src/domain/account/account.domain';
 
 class AccountDto {
   @ApiProperty()

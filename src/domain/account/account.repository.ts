@@ -4,8 +4,8 @@ import { ResultAsync } from 'neverthrow';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 
 import { RepositoryError } from '../repository.error';
+import { AccountCreateProps } from './account.domain';
 import {
-  AccountCreateProps,
   AccountWithoutPassword,
   accountWithoutPasswordArgs,
 } from './account.type';
@@ -30,7 +30,9 @@ export class AccountRepository {
     );
   }
 
-  create(data: AccountCreateProps): ResultAsync<AccountWithoutPassword, Error> {
+  create(
+    props: AccountCreateProps,
+  ): ResultAsync<AccountWithoutPassword, Error> {
     const accountCreateInput = (props: AccountCreateProps) => {
       return Prisma.validator<Prisma.AccountCreateInput>()({
         name: props.name,
@@ -42,7 +44,7 @@ export class AccountRepository {
     return ResultAsync.fromPromise(
       this.prisma.account.create({
         ...accountWithoutPasswordArgs,
-        data: accountCreateInput(data),
+        data: accountCreateInput(props),
       }),
       (e: unknown) => {
         throw new RepositoryError('failed to create account', {
