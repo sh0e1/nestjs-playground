@@ -26,13 +26,13 @@ export class AccountService {
       return result.success ? okAsync(result.data) : errAsync(result.error);
     };
 
-    const checkIfEmailExists = (email: string): ResultAsync<null, Error> => {
+    const checkIfEmailExists = (email: string): ResultAsync<void, Error> => {
       return this.accountRepository
         .findUnique({ email })
         .andThen((account: AccountWithoutPassword) =>
           account
             ? err(ServiceError.AlreadyExists('email already exists'))
-            : ok(null),
+            : ok(),
         );
     };
 
@@ -40,7 +40,7 @@ export class AccountService {
       validate(params),
       checkIfEmailExists(params.email),
     ])
-      .andThen(([props, _]: [AccountCreateProps, null]) =>
+      .andThen(([props, _]: [AccountCreateProps, void]) =>
         this.accountRepository.create(props),
       )
       .mapErr(
