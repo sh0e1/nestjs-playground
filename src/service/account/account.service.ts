@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { err, ok, ResultAsync } from 'neverthrow';
-import { Account } from 'src/domain/account/account.domain';
+import { Account, AccountCreateProps } from 'src/domain/account/account.domain';
 import { AccountRepository } from 'src/domain/account/account.repository';
 import { AccountWithoutPassword } from 'src/domain/account/account.type';
 
@@ -16,20 +16,20 @@ export class AccountService {
     password: string;
   }): ResultAsync<AccountWithoutPassword, ServiceError> {
     const checkIfEmailExists = (
-      account: Account,
-    ): ResultAsync<Account, Error> => {
+      props: AccountCreateProps,
+    ): ResultAsync<AccountCreateProps, Error> => {
       return this.accountRepository
-        .findUnique({ email: account.email })
+        .findUnique({ email: props.email })
         .andThen((other: AccountWithoutPassword) =>
           other
             ? err(ServiceError.AlreadyExists('email already exists'))
-            : ok(account),
+            : ok(props),
         );
     };
 
     return Account.validate(params)
       .asyncAndThen(checkIfEmailExists)
-      .andThen((account) => this.accountRepository.create(account))
+      .andThen((props) => this.accountRepository.create(props))
       .mapErr(
         (e: Error): ServiceError =>
           new ServiceError('failed to create account', { cause: e }),
