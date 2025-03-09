@@ -1,12 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { err, errAsync, ok, okAsync, ResultAsync } from 'neverthrow';
+import { err, ok, ResultAsync } from 'neverthrow';
+import { Account } from 'src/domain/account/account.domain';
 import { AccountRepository } from 'src/domain/account/account.repository';
-import {
-  AccountCreateProps,
-  accountCreatePropsSchema,
-  AccountWithoutPassword,
-} from 'src/domain/account/account.type';
-import { ZodError } from 'zod';
+import { AccountWithoutPassword } from 'src/domain/account/account.type';
 
 import { ServiceError } from '../service.error';
 
@@ -19,30 +15,21 @@ export class AccountService {
     email: string;
     password: string;
   }): ResultAsync<AccountWithoutPassword, ServiceError> {
-    const validate = (
-      props: AccountCreateProps,
-    ): ResultAsync<AccountCreateProps, ZodError> => {
-      const result = accountCreatePropsSchema.safeParse(props);
-      return result.success ? okAsync(result.data) : errAsync(result.error);
-    };
-
-    const checkIfEmailExists = (email: string): ResultAsync<void, Error> => {
+    const checkIfEmailExists = (
+      account: Account,
+    ): ResultAsync<Account, Error> => {
       return this.accountRepository
-        .findUnique({ email })
-        .andThen((account: AccountWithoutPassword) =>
-          account
+        .findUnique({ email: account.email })
+        .andThen((other: AccountWithoutPassword) =>
+          other
             ? err(ServiceError.AlreadyExists('email already exists'))
-            : ok(),
+            : ok(account),
         );
     };
 
-    return ResultAsync.combine([
-      validate(params),
-      checkIfEmailExists(params.email),
-    ])
-      .andThen(([props, _]: [AccountCreateProps, void]) =>
-        this.accountRepository.create(props),
-      )
+    return Account.validate(params)
+      .asyncAndThen(checkIfEmailExists)
+      .andThen((account) => this.accountRepository.create(account))
       .mapErr(
         (e: Error): ServiceError =>
           new ServiceError('failed to create account', { cause: e }),
