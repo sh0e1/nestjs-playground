@@ -7,7 +7,9 @@ generator client {
 }
 
 generator fabbrica {
-  provider = "prisma-fabbrica"
+  provider    = "prisma-fabbrica"
+  tsconfig    = "../tsconfig.json"
+  noTranspile = true
 }
 
 datasource db {
