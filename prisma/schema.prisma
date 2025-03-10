@@ -6,6 +6,10 @@ generator client {
   binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
 }
 
+generator fabbrica {
+  provider = "prisma-fabbrica"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
