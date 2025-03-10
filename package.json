@@ -42,6 +42,7 @@
     "@nestjs/cli": "^11.0.5",
     "@nestjs/schematics": "^11.0.2",
     "@nestjs/testing": "^11.0.11",
+    "@quramy/prisma-fabbrica": "^2.2.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.0",
     "@types/jest": "29.5.14",
@@ -78,6 +79,9 @@
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"
+    ],
+    "coveragePathIgnorePatterns": [
+      "__generated__"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
