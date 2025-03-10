@@ -38,3 +38,6 @@ report.json
 
 # env
 .env
+
+# generated files
+__generated__/
