@@ -1,7 +1,5 @@
-import { fixupPluginRules } from '@eslint/compat';
 import eslint from '@eslint/js';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import eslintPluginNeverthrow from 'eslint-plugin-neverthrow';
 import eslintPluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
@@ -32,7 +30,6 @@ export default tseslint.config(
     plugins: {
       'simple-import-sort': eslintPluginSimpleImportSort,
       'unused-imports': eslintPluginUnusedImports,
-      neverthrow: fixupPluginRules(eslintPluginNeverthrow),
     },
   },
   {
@@ -53,7 +50,6 @@ export default tseslint.config(
           argsIgnorePattern: '^_',
         },
       ],
-      'neverthrow/must-use-result': 'error',
     },
   },
 );
