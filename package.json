@@ -85,7 +85,13 @@
       "__generated__"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node",
+    "testEnvironment": "@quramy/jest-prisma-node/environment",
+    "testEnvironmentOptions": {
+      "verboseQuery": true
+    },
+    "setupFilesAfterEnv": [
+      "@quramy/prisma-fabbrica/scripts/jest-prisma"
+    ],
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1"
     }
