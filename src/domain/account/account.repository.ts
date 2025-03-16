@@ -16,14 +16,14 @@ export class AccountRepository {
 
   findUnique(
     where: Prisma.AccountWhereUniqueInput,
-  ): ResultAsync<AccountWithoutPassword | null, Error> {
+  ): ResultAsync<AccountWithoutPassword | null, RepositoryError> {
     return ResultAsync.fromPromise(
       this.prisma.account.findUnique({
         ...accountWithoutPasswordArgs,
         where,
       }),
       (e: unknown) => {
-        throw new RepositoryError('failed to find unique for account', {
+        return new RepositoryError('failed to find unique for account', {
           cause: e,
         });
       },
@@ -32,7 +32,7 @@ export class AccountRepository {
 
   create(
     props: AccountCreateProps,
-  ): ResultAsync<AccountWithoutPassword, Error> {
+  ): ResultAsync<AccountWithoutPassword, RepositoryError> {
     const accountCreateInput = (props: AccountCreateProps) => {
       return Prisma.validator<Prisma.AccountCreateInput>()({
         name: props.name,
@@ -47,7 +47,7 @@ export class AccountRepository {
         data: accountCreateInput(props),
       }),
       (e: unknown) => {
-        throw new RepositoryError('failed to create account', {
+        return new RepositoryError('failed to create account', {
           cause: e,
         });
       },
