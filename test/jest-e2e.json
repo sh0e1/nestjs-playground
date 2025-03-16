@@ -7,7 +7,7 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "collectCoverageFrom": ["<rootDir>/src/**/*.(t|j)s"],
-  "coveragePathIgnorePatterns": ["__generated__"],
+  "coveragePathIgnorePatterns": ["__generated__", "\\.spec\\.(t|j)s$"],
   "coverageDirectory": "<rootDir>/test/coverage",
   "moduleNameMapper": {
     "^src/(.*)$": "<rootDir>/src/$1"
