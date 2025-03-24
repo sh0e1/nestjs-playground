@@ -46,7 +46,7 @@
     "@quramy/prisma-fabbrica": "^2.2.2",
     "@types/express": "^5.0.0",
     "@types/jest": "29.5.14",
-    "@types/node": "22.13.10",
+    "@types/node": "22.13.13",
     "@types/supertest": "^6.0.2",
     "dotenv-cli": "^8.0.0",
     "eslint": "^9.22.0",
