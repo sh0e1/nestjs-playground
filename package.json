@@ -43,7 +43,7 @@
     "@nestjs/schematics": "^11.0.2",
     "@nestjs/testing": "^11.0.12",
     "@quramy/jest-prisma-node": "^1.8.1",
-    "@quramy/prisma-fabbrica": "^2.2.2",
+    "@quramy/prisma-fabbrica": "^2.2.3",
     "@types/express": "^5.0.1",
     "@types/jest": "29.5.14",
     "@types/node": "22.14.0",
