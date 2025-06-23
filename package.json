@@ -34,7 +34,7 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "winston": "^3.17.0",
-    "zod": "^3.25.28"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.9",
