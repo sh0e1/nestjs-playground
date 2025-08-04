@@ -39,8 +39,8 @@
   "devDependencies": {
     "@eslint/compat": "^1.3.1",
     "@eslint/js": "^9.26.0",
-    "@nestjs/cli": "^11.0.7",
-    "@nestjs/schematics": "^11.0.5",
+    "@nestjs/cli": "^11.0.10",
+    "@nestjs/schematics": "^11.0.7",
     "@nestjs/testing": "^11.1.5",
     "@quramy/jest-prisma-node": "^1.8.1",
     "@quramy/prisma-fabbrica": "^2.3.0",
