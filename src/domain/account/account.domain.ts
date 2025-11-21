@@ -20,7 +20,7 @@ const SALT_ROUNDS = 10;
 const accountSchema = z
   .object({
     name: z.string().min(5).max(191),
-    email: z.string().email().max(191),
+    email: z.email().max(191),
     password: z
       .string()
       .regex(passwordRegex)
